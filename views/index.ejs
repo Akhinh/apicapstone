@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Form Example</title>
+  <link rel="stylesheet"  href="styles/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="response-area">
+      <p>
+        <%= content %>
+      </p>
+    </div>
+    <form action="/submit" id="myForm" method="post">
+        <label for="categoryType">Select Category/Categories Type:</label>
+        <select id="categoryType" name="categoryType">
+            <option value="Any">Any</option>
+            <option value="custom">Custom</option>
+        </select>
+
+        <div id="checkboxContainer">
+            <h4>Select Categories:</h4>
+            <label><input type="checkbox" name="categories" value="Programming"> Programming</label>
+            <label><input type="checkbox" name="categories" value="Misc"> Misc</label>
+            <label><input type="checkbox" name="categories" value="Dark"> Dark</label>
+            <label><input type="checkbox" name="categories" value="Pun"> Pun</label>
+            <label><input type="checkbox" name="categories" value="Spooky"> Spooky</label>
+            <label><input type="checkbox" name="categories" value="Christmas"> Christmas</label>
+        </div>
+        
+        <br><br>
+
+        <label for="language-select">Select Language(optional i.e english as default):</label>
+        <select id="language-select" name="language">
+          <option value="cs">Czech (cs)</option>
+          <option value="en">English (en)</option>
+          <option value="fr">French (fr)</option>
+          <option value="de">German (de)</option>
+          <option value="pt">Portuguese (pt)</option>
+          <option value="es">Spanish (es)</option>
+        </select>
+        <p>
+        <button type="submit" id="get" value="GET" formaction="/submit">Fetch</button>
+        </p>
+    </form>
+  </div>
+  <footer>
+    Made with ❤️ in Nigeria by <a href="https://www.instagram.com/akhinh/" target="_blank" rel="noopener noreferrer">Akin</a>
+</footer>
+
+</body>
+<script>
+    document.getElementById("categoryType").addEventListener("change", function () {
+      const checkboxContainer = document.getElementById("checkboxContainer");
+      if (this.value === "custom") {
+        checkboxContainer.style.display = "block";
+      } else {
+        checkboxContainer.style.display = "none";
+      }
+    });
+  </script>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Form Example</title>
+  <link rel="stylesheet"  href="styles/main.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="response-area">
+      <p>
+        <% if (locals.content) { %>
+            <%= content %>
+        <% } else { %>  
+            <%= singlePart %>
+        <% } %> 
+      </p>
+    </div>
+  
+        <% if (locals.response) { %>
+            <p>
+                <%= response %>
+            </p>
+         
+        <% } %>
+        
+        <img src="<%= theImg %>" class="form-img" alt="Form Image">
+
+        <p class="nav-buttons">
+            <a href="/"><button type="button" id="get" value="GET">Back</button></a>
+
+            <a href="javascript:void(0)" class="refresh" onclick="location.reload();">Refresh
+              <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M7.999 1a7 7 0 0 0-7 7h1.667a5.333 5.333 0 1 1 1.22 3.473l1.06-1.06H.667v3.333L1.937 12.54a7 7 0 1 0 6.062-11.54z"/>
+              </svg>
+            </a>
+        </p>
+  </div>
+  <footer>
+    For highly offensive jokes, contact us at 
+    <a href="mailto:pythondatetimemodule@gmail.com" target="_blank" rel="noopener noreferrer">Gmail</a>
+  </footer>
+
+</body>
+
+</html>
