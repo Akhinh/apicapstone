@@ -14,73 +14,91 @@ app.get("/", (req, res) => {
     res.render("index.ejs", {content: "Welcome, don't take the jokes personal. the jokes are not meant to offend anyone!!!"})
 });
 
-app.post("/submit", async (req, res) =>{
+app.post("/submit", async (req, res) => {
     // Route to handle form submission
     const categoryType = req.body.categoryType; // "any" or "custom"
-    const categories = req.body.categories; // Array of selected categories or undefined if none
-    const language = req.body.language; 
-    console.log(images)
-    const image = Math.floor(Math.random() * images.length)
-    var theImage = images[image]
-    console.log(theImage)
-    let categ;
+    let categories = req.body.categories; // Can be a string (single selection) or an array (multiple selections)
+    const language = req.body.language;
+    const image = Math.floor(Math.random() * images.length);
+    var theImage = images[image];
 
-    if (categoryType === "Any" && language != "en") {
-        try{
-            const result = await axios.get(apiUrl + categoryType, {params:{lang:language}})
-            const file = result.data
-            console.log(file)
-            res.render("next.ejs", {content:file.setup, singlePart:file.joke, response:file.delivery, theImg:theImage})
-        }catch (error){
-            console.log(error.response.data);
+    // Ensure categories is always an array
+    if (!Array.isArray(categories) && categories) {
+        categories = [categories]; // Convert single selection to array
+    }
+
+    console.log(categories);
+
+    if (categoryType === "Any" && language !== "en") {
+        try {
+            const result = await axios.get(apiUrl + categoryType, { params: { lang: language } });
+            const file = result.data;
+            console.log(file);
+            res.render("next.ejs", {
+                content: file.setup,
+                singlePart: file.joke,
+                response: file.delivery,
+                theImg: theImage
+            });
+        } catch (error) {
+            console.log(error.response?.data || error.message);
             res.status(500).send("Internal Server Error");
         }
-
-    }else if (categoryType === "Any"){
-        try{
-            const result = await axios.get(apiUrl + categoryType)
-            const file = result.data
-            console.log(file)
-            res.render("next.ejs", {content:file.setup, singlePart:file.joke, response:file.delivery, theImg:theImage})
-        }catch (error){
-            console.log(error.response.data);
+    } else if (categoryType === "Any") {
+        try {
+            const result = await axios.get(apiUrl + categoryType);
+            const file = result.data;
+            res.render("next.ejs", {
+                content: file.setup,
+                singlePart: file.joke,
+                response: file.delivery,
+                theImg: theImage
+            });
+        } catch (error) {
+            console.log(error.response?.data || error.message);
             res.status(500).send("Internal Server Error");
         }
-
-    } else if (categoryType === "custom") { 
-      // Check if categories were selected and checking other languages except english
-      
-        if (Array.isArray(categories)  && language != "en") {
+    } else if (categoryType === "custom") {
+        // Ensure categories is an array before proceeding
+        if (categories.length > 0 && language !== "en") {
             const joined = categories.join(",");
-            try{
-                const result = await axios.get(apiUrl + joined, {params:{lang:language}})
-                const file = result.data
-                console.log(file)
-                res.render("next.ejs", {content:file.setup, singlePart:file.joke, response:file.delivery, theImg:theImage})
-            }catch (error){
-                console.log(error.response.data);
+            try {
+                const result = await axios.get(apiUrl + joined, { params: { lang: language } });
+                const file = result.data;
+                console.log(file);
+                res.render("next.ejs", {
+                    content: file.setup,
+                    singlePart: file.joke,
+                    response: file.delivery,
+                    theImg: theImage
+                });
+            } catch (error) {
+                console.log(error.response?.data || error.message);
                 res.status(500).send("Internal Server Error");
             }
-
-        }else if (Array.isArray(categories)) {
+        } else if (categories.length > 0) {
             const joined = categories.join(",");
-            console.log(apiUrl+joined)
-            try{
-                const result = await axios.get(apiUrl + joined)
-                const file = result.data
-                console.log(file)
-                res.render("next.ejs", {content:file.setup, singlePart:file.joke, response:file.delivery, theImg:theImage})
-            }catch (error){
-                console.log(error.response.data);
+            console.log(apiUrl + joined);
+            try {
+                const result = await axios.get(apiUrl + joined);
+                const file = result.data;
+                res.render("next.ejs", {
+                    content: file.setup,
+                    singlePart: file.joke,
+                    response: file.delivery,
+                    theImg: theImage
+                });
+            } catch (error) {
+                console.log(error.response?.data || error.message);
                 res.status(500).send("Internal Server Error");
             }
-
         } else {
-            const result = "No categories were selected. choose any(for all) or custom(and select atleast one category";
-            res.render("index.ejs", {content:result})
-      }
+            const result = "No categories were selected. Choose 'Any' for all or 'Custom' and select at least one category.";
+            res.render("index.ejs", { content: result });
+        }
     }
 });
+
 
 
 app.listen(port, () =>{
